@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF 8">
+  <meta name="viewport" content="width=device width, initial scale=1.0">
+  <title>HR Candidate Search Assistant</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: #ffffff;
+      padding: 28px;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      margin-bottom: 22px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+      color: #111827;
+    }
+
+    .header p {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    .searchBox {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 18px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: #57068c;
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #43046d;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      margin-bottom: 22px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: #111827;
+      font-size: 22px;
+    }
+
+    .card h3 {
+      margin-top: 20px;
+      color: #57068c;
+      font-size: 18px;
+    }
+
+    .profileItem {
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .profileItem strong {
+      color: #111827;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #efe7f6;
+      color: #57068c;
+      padding: 7px 10px;
+      border-radius: 20px;
+      margin: 4px 5px 4px 0;
+      font-size: 14px;
+    }
+
+    .summaryText {
+      line-height: 1.7;
+      color: #374151;
+    }
+
+    .warning {
+      background: #fff7ed;
+      border-left: 5px solid #f97316;
+      padding: 14px;
+      border-radius: 10px;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+
+    .empty {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      color: #6b7280;
+    }
+
+    ul {
+      padding-left: 20px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 800px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        margin: 20px auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="header">
+      <h1>HR Candidate Search Assistant</h1>
+      <p>
+        This small GenAI style app helps HR recruiters search a candidate by name and quickly generate a structured screening summary for a selected role. The goal is to reduce repeated resume reading and help recruiters prepare better first round interviews.
+      </p>
+    </div>
+
+    <div class="searchBox">
+      <label for="candidateName">Candidate Name</label>
+      <input id="candidateName" type="text" placeholder="Example: Mingyu Wang">
+
+      <label for="targetRole">Target Role</label>
+      <select id="targetRole">
+        <option value="Business Analyst Intern">Business Analyst Intern</option>
+        <option value="Data Analyst Intern">Data Analyst Intern</option>
+        <option value="Marketing Analyst Intern">Marketing Analyst Intern</option>
+        <option value="AI Strategy Analyst Intern">AI Strategy Analyst Intern</option>
+        <option value="Operations Analyst Intern">Operations Analyst Intern</option>
+      </select>
+
+      <button onclick="searchCandidate()">Search Candidate</button>
+    </div>
+
+    <div id="resultArea" class="empty">
+      Enter a candidate name to start. Try: Mingyu Wang, Alex Chen, Maria Lopez, David Kim, or Priya Patel.
+    </div>
+
+  </div>
+
+  <script>
+    const candidates = [
+      {
+        name: "Mingyu Wang",
+        education: "NYU graduate student, Johns Hopkins Carey Business School, Stony Brook University undergraduate background in Applied Mathematics and Economics",
+        skills: ["Python", "SQL", "Excel", "Tableau", "Power BI", "Streamlit", "Business Analysis", "Data Visualization"],
+        experience: "Worked on data analytics, AI safety, dashboard development, business strategy, and automation projects. Has internship experience related to data analysis, risk management, financial auditing, and business operations.",
+        projects: "Built AI safety evaluation workflow, contractor enrichment automation, churn prediction analysis, and business dashboard projects.",
+        target: "Business Analyst, Data Analyst, AI Strategy Analyst",
+        resume: "Candidate has strong analytics and business problem solving experience. The candidate has used Python, SQL, Excel, Tableau, and Power BI in academic and project settings. The candidate has experience turning raw data into business insights and explaining technical results to non technical audiences."
+      },
+      {
+        name: "Alex Chen",
+        education: "Bachelor of Science in Computer Science from a large public university",
+        skills: ["JavaScript", "React", "Node.js", "Python", "API Development", "GitHub"],
+        experience: "Completed software engineering internship focused on building internal web tools and improving backend APIs.",
+        projects: "Created a task management web app, a resume parser prototype, and an internal reporting dashboard.",
+        target: "Software Engineer, Full Stack Developer",
+        resume: "Candidate has strong software development experience with JavaScript, React, Node.js, and Python. He is comfortable building web applications and working with APIs."
+      },
+      {
+        name: "Maria Lopez",
+        education: "Master of Marketing Analytics",
+        skills: ["Market Research", "Excel", "Power BI", "Customer Segmentation", "Survey Analysis", "Presentation"],
+        experience: "Worked on marketing campaign analysis, customer behavior research, and brand positioning projects.",
+        projects: "Built a customer segmentation dashboard and analyzed campaign performance for a retail case study.",
+        target: "Marketing Analyst, Brand Strategy Analyst",
+        resume: "Candidate has experience in marketing analytics, customer segmentation, and communication. She is strong in presenting insights to business teams."
+      },
+      {
+        name: "David Kim",
+        education: "Bachelor of Business Administration with concentration in Operations Management",
+        skills: ["Excel Solver", "Supply Chain", "Inventory Modeling", "Process Improvement", "Data Cleaning"],
+        experience: "Worked on operations improvement projects, inventory simulation, and process documentation.",
+        projects: "Created an inventory optimization model and a process improvement proposal for a logistics case.",
+        target: "Operations Analyst, Supply Chain Analyst",
+        resume: "Candidate is a good fit for operations and supply chain roles. He has experience using Excel and simulation logic to support business decisions."
+      },
+      {
+        name: "Priya Patel",
+        education: "Master of Information Systems",
+        skills: ["SQL", "Python", "Data Cleaning", "Dashboarding", "Requirement Gathering", "User Testing"],
+        experience: "Worked with product and data teams to translate business requirements into analytics deliverables.",
+        projects: "Built a product usage dashboard and supported a user research project for a SaaS product.",
+        target: "Business Analyst, Product Analyst",
+        resume: "Candidate has a mix of technical and business skills. She is experienced in requirements gathering, SQL analysis, and dashboard communication."
+      }
+    ];
+
+    function searchCandidate() {
+      const nameInput = document.getElementById("candidateName").value.trim().toLowerCase();
+      const targetRole = document.getElementById("targetRole").value;
+      const resultArea = document.getElementById("resultArea");
+
+      if (nameInput === "") {
+        resultArea.className = "empty";
+        resultArea.innerHTML = "Please enter a candidate name.";
+        return;
+      }
+
+      const candidate = candidates.find(person =>
+        person.name.toLowerCase().includes(nameInput)
+      );
+
+      if (!candidate) {
+        resultArea.className = "empty";
+        resultArea.innerHTML = "No matching candidate found. Please check the spelling or try another name.";
+        return;
+      }
+
+      const summary = generateAISummary(candidate, targetRole);
+
+      resultArea.className = "";
+      resultArea.innerHTML = `
+        <div class="grid">
+          <div class="card">
+            <h2>Candidate Profile</h2>
+
+            <div class="profileItem">
+              <strong>Name:</strong><br>
+              ${candidate.name}
+            </div>
+
+            <div class="profileItem">
+              <strong>Education:</strong><br>
+              ${candidate.education}
+            </div>
+
+            <div class="profileItem">
+              <strong>Target Career Area:</strong><br>
+              ${candidate.target}
+            </div>
+
+            <div class="profileItem">
+              <strong>Experience Summary:</strong><br>
+              ${candidate.experience}
+            </div>
+
+            <div class="profileItem">
+              <strong>Projects:</strong><br>
+              ${candidate.projects}
+            </div>
+
+            <div class="profileItem">
+              <strong>Key Skills:</strong><br>
+              ${candidate.skills.map(skill => `<span class="tag">${skill}</span>`).join("")}
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>AI Screening Summary</h2>
+
+            <h3>Candidate Overview</h3>
+            <p class="summaryText">${summary.overview}</p>
+
+            <h3>Role Fit</h3>
+            <p class="summaryText">${summary.roleFit}</p>
+
+            <h3>Key Strengths</h3>
+            <ul>
+              ${summary.strengths.map(item => `<li>${item}</li>`).join("")}
+            </ul>
+
+            <h3>Potential Concerns</h3>
+            <ul>
+              ${summary.concerns.map(item => `<li>${item}</li>`).join("")}
+            </ul>
+
+            <h3>Suggested Interview Questions</h3>
+            <ul>
+              ${summary.questions.map(item => `<li>${item}</li>`).join("")}
+            </ul>
+
+            <div class="warning">
+              <strong>Human Review Reminder:</strong>
+              This summary is designed to support first round screening. HR should review the original resume before making any final hiring decision.
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function generateAISummary(candidate, targetRole) {
+      const skillsText = candidate.skills.join(", ");
+
+      let overview = `${candidate.name} has a background in ${candidate.education}. The candidate shows experience in ${candidate.experience}`;
+
+      let roleFit = "";
+      let strengths = [];
+      let concerns = [];
+      let questions = [];
+
+      const lowerRole = targetRole.toLowerCase();
+      const lowerTarget = candidate.target.toLowerCase();
+      const lowerSkills = skillsText.toLowerCase();
+      const lowerExperience = candidate.experience.toLowerCase();
+
+      if (
+        lowerTarget.includes(lowerRole.split(" ")[0]) ||
+        lowerSkills.includes("business analysis") ||
+        lowerSkills.includes("data") ||
+        lowerExperience.includes("analytics")
+      ) {
+        roleFit = `For the ${targetRole} role, this candidate appears to be a strong potential fit because the profile includes relevant analytical, communication, and project based experience. The candidate can likely support data driven decision making and turn information into business insights.`;
+      } else {
+        roleFit = `For the ${targetRole} role, this candidate may have some transferable skills, although the profile is stronger in another area. HR should ask follow up questions to confirm whether the candidate has enough direct experience for this role.`;
+      }
+
+      strengths = [
+        `Relevant skills include ${skillsText}.`,
+        "The candidate has project experience that can be discussed during the interview.",
+        "The profile shows ability to organize information and connect technical work with business needs."
+      ];
+
+      concerns = [
+        "Some experience descriptions may need more measurable results.",
+        "The recruiter should confirm the candidate's exact level of hands on experience.",
+        "The tool summary may miss details from the full resume, so human review is still needed."
+      ];
+
+      questions = [
+        `Can you describe one project that best prepared you for a ${targetRole} role?`,
+        "What tools did you use most often, and how did they help you solve the business problem?",
+        "Can you give an example of how you communicated data or analysis results to a non technical audience?",
+        "What part of your previous experience is most relevant to this position?",
+        "What would you want to learn or improve during this role?"
+      ];
+
+      return {
+        overview,
+        roleFit,
+        strengths,
+        concerns,
+        questions
+      };
+    }
+  </script>
+</body>
+</html>
