@@ -1,259 +1,337 @@
-# HR Candidate Search Assistant
+# AI Candidate Web Research Assistant
 
 ## Project Overview
 
-This project is a small GenAI style web app designed for a narrow HR workflow: first round candidate screening.
+This project is a small front end demo of a GenAI powered candidate web research assistant for HR recruiters.
 
-The user is an HR recruiter or hiring manager. In a normal recruiting process, HR often needs to open many resumes, read each one manually, identify the candidate's education, skills, experience, and then decide whether the candidate should move forward. This process takes time and can be inconsistent, especially when different candidates use different resume formats.
+The intended user is an HR recruiter or hiring manager who wants to quickly understand a candidate before a first round screening conversation. In a normal hiring workflow, recruiters often search a candidate name online, open several public pages, read LinkedIn profiles, GitHub pages, school pages, company pages, personal websites, or portfolio pages, and then write notes by hand.
 
-My app helps the recruiter search a candidate by name and quickly see a structured candidate profile. The app also generates a screening summary, role fit explanation, key strengths, potential concerns, and suggested interview questions.
+This process can take time because public information is scattered across many sources. It can also be inconsistent because different recruiters may focus on different details.
 
-The goal is to save HR time, reduce repeated resume reading, and help recruiters prepare better first round interviews.
+This project demonstrates a more structured workflow. The recruiter enters a candidate name, such as Mingyu Wang, and the app shows what an AI generated candidate research profile could look like after collecting and summarizing public professional information.
+
+The current version is an HTML demo. It does not perform live web search. It shows the intended user experience, interface design, output format, and business logic. A full version would connect the HTML interface to a secure backend, a public web search API, and an LLM API.
 
 ## Context, User, and Problem
 
-The main user is an HR recruiter who needs to review candidates during the first screening stage.
+The user for this project is an HR recruiter who needs to research candidates during the early screening stage.
 
-The workflow I am improving is candidate profile review. In the current workflow, the recruiter usually opens a resume, reads the full document, highlights important information, and writes notes about whether the candidate fits the role. This can be slow because resume information is often unstructured.
+The workflow I am improving is public candidate research. Before interviewing a candidate, recruiters often want to understand the candidate's public professional background. They may search the candidate's name online, check public profiles, review project pages, and look for evidence of skills or experience.
 
-For example, one resume may emphasize education, another may emphasize projects, and another may emphasize work experience. Even when candidates have similar skills, the recruiter still needs to manually compare them.
+The problem is that this research process is repetitive and time consuming. A recruiter may need to open multiple pages, compare information, decide what is relevant, and write a short candidate summary manually.
 
-This problem matters because first round screening affects both the company and the candidate. For the company, slow screening can delay hiring. For the candidate, slow screening can delay feedback. A structured assistant can help HR understand each candidate faster and more consistently.
+This matters because early candidate research affects both the company and the candidate. For the company, faster research can help recruiters move qualified candidates forward sooner. For the candidate, faster research can improve response time and reduce delays in the hiring process.
 
-This project focuses on one specific task: helping HR search one candidate by name and review that candidate's profile for a selected target role.
+This project focuses on one narrow use case:
+
+An HR recruiter enters a candidate name and receives a structured research summary based on publicly available professional information.
 
 ## Solution and Design
 
-I built a simple HTML web app called HR Candidate Search Assistant.
+I built a simple HTML based demo app called AI Candidate Web Research Assistant.
 
-The app allows the user to enter a candidate name and select a target role. After clicking the search button, the app searches a small built in candidate dataset. If the candidate is found, the app displays the candidate profile and generates a structured screening summary.
+The app allows the user to enter a candidate name and optional context. The optional context can include school, company, target role, or location. This helps reduce confusion when different people have the same name.
 
-The app output includes the following sections:
+The current HTML demo simulates the output of a GenAI powered web research workflow. It shows how the final system would organize candidate information after public web search and LLM summarization.
 
-Candidate profile
-
-Education
-
-Target career area
-
-Experience summary
-
-Projects
-
-Key skills
+The output includes:
 
 Candidate overview
 
-Role fit
+Possible education background
 
-Key strengths
+Possible work experience
 
-Potential concerns
+Publicly visible skills
+
+Public projects or portfolio evidence
+
+Source links or source placeholders
+
+Uncertainty notes
 
 Suggested interview questions
 
 Human review reminder
 
-The app is intentionally simple. It is designed to show the business workflow clearly instead of building a large recruiting system.
+The main design choice is to focus on public professional information. The app is not designed to collect private information, hidden information, or information from accounts that require login access.
+
+The second design choice is to show uncertainty clearly. Public web search results can be incomplete, outdated, or about the wrong person with the same name. Because of this, the app reminds HR to verify the sources manually.
+
+The third design choice is to keep the app simple. This project is focused on one business workflow instead of trying to build a complete recruiting platform.
 
 ## App Logic
 
-The app follows a clear step by step workflow.
+The app follows this workflow.
 
-Step 1: The user enters a candidate name
+## Step 1: User enters candidate information
 
-The recruiter types a candidate name into the search box. For example, the recruiter can type Mingyu Wang.
+The recruiter enters a candidate name, such as Mingyu Wang.
 
-Step 2: The user selects a target role
+The recruiter can also enter optional context, such as Johns Hopkins Carey Business School, Business Analyst, or New York. This optional context helps the system focus the search and reduce same name confusion.
 
-The recruiter selects a role from the dropdown menu. Example roles include Business Analyst Intern, Data Analyst Intern, Marketing Analyst Intern, AI Strategy Analyst Intern, and Operations Analyst Intern.
+## Step 2: The app simulates public web research
 
-Step 3: The app searches the candidate dataset
+Since the current version is an HTML demo, it does not call a live search API from the browser.
 
-The candidate dataset is stored inside the JavaScript code as structured objects. Each candidate record includes name, education, skills, experience, projects, target career area, and resume style text.
+Instead, it uses sample research content to show what the output would look like after a full system collects public search results.
 
-The search function converts the user input to lowercase and compares it with the candidate names in the dataset. This allows partial name search. For example, typing Mingyu can still find Mingyu Wang.
+In the full version, the frontend would send the candidate name and optional context to a backend server.
 
-Step 4: The app checks whether a match exists
+## Step 3: The full version backend would search the public web
 
-If the app finds a matching candidate, it continues to the summary generation step.
+In the full version, the backend would use a search API such as SerpAPI, Bing Search API, Google Custom Search API, or Tavily.
 
-If the app does not find a matching candidate, it shows a message saying that no matching candidate was found. This helps the user check spelling or try another name.
+The backend would search public professional sources, such as:
 
-Step 5: The app displays the candidate profile
+LinkedIn public profile pages
 
-After finding the candidate, the app shows a structured profile card. This card includes the candidate's education, experience, projects, target career area, and key skills.
+GitHub pages
 
-This profile section works as the baseline information view. It gives the recruiter the original structured information before reading the AI style summary.
+University pages
 
-Step 6: The app generates an AI style screening summary
+Company profile pages
 
-The app uses a function called generateAISummary. This function takes two inputs: the selected candidate and the target role.
+Personal portfolio websites
 
-The function reads the candidate's skills, experience, and target career area. Then it creates a structured screening summary with candidate overview, role fit, strengths, concerns, and interview questions.
+Public project pages
 
-The current version uses rule based logic to simulate a GenAI workflow. It demonstrates how a real LLM based version would organize resume information into a recruiter friendly summary. In a production version, this summary generation step could be connected to an LLM API through a secure backend.
+Public articles or publications
 
-Step 7: The app reminds the recruiter to keep human review
+The system would collect only public information, including page titles, URLs, and snippets.
 
-The final output includes a human review reminder. This is important because the app should support HR screening, while the final hiring decision should still be made by a human recruiter.
+## Step 4: The LLM would summarize the results
 
-## Key Design Choices
+After collecting the public search results, the backend would send the result snippets and links to an LLM.
 
-The first design choice is to keep the workflow narrow. This app only focuses on searching and summarizing one candidate profile. It does not try to manage the full hiring process.
+The LLM would organize the information into a structured HR research profile.
 
-The second design choice is to use structured output. Instead of giving one long paragraph, the app separates the result into profile, role fit, strengths, concerns, and interview questions. This makes the result easier for HR to use.
+The prompt would ask the LLM to separate facts from assumptions and clearly mark uncertain information.
 
-The third design choice is to include a baseline comparison. The candidate profile card represents the simpler baseline because it only displays the candidate information. The AI style summary adds interpretation and interview support.
+The LLM would also be asked to avoid making final hiring decisions.
 
-The fourth design choice is to include human review. Since hiring decisions can affect people's careers, the app should not be used as a final decision maker. It is a screening assistant that helps HR prepare.
+## Step 5: The app displays a structured candidate profile
+
+The frontend displays the result in a clean format.
+
+The output includes a candidate overview, possible education, possible experience, skills, projects, links, uncertainty notes, and interview questions.
+
+This structure helps HR understand the candidate faster than reading multiple web pages manually.
+
+## Step 6: Human review stays required
+
+The app includes a human review reminder.
+
+This is important because public search results may be incomplete or incorrect. A person with the same name may appear in the results. The recruiter must verify the source links before using the information in a real hiring process.
 
 ## Why GenAI Is Useful
 
-This task is useful for GenAI because resume screening is more than keyword search. HR needs to understand a candidate's overall background, connect skills to a target role, summarize project experience, and prepare interview questions.
+This task is useful for GenAI because candidate research involves more than simple keyword search.
 
-A simple keyword search can show whether a candidate has Python, SQL, or Excel. However, it does not explain how those skills relate to a role. It also does not help the recruiter ask better follow up questions.
+A search engine can find pages related to a candidate name, but it does not automatically organize the results into an HR friendly profile. The recruiter still needs to read several pages, identify relevant career information, and write notes.
 
-A GenAI workflow can turn unstructured candidate information into a consistent summary. It can also help HR identify strengths, possible concerns, and useful interview questions.
+GenAI is useful because it can synthesize scattered public information into a consistent summary. It can help explain possible education, work experience, skills, projects, and interview topics.
+
+The LLM also helps turn unstructured web snippets into a readable format that supports recruiter decision making.
+
+## Baseline Comparison
+
+The baseline workflow is manual public web search.
+
+In the baseline workflow, a recruiter searches the candidate name manually, opens several pages, reads the results, and writes notes by hand.
+
+The GenAI workflow is different because the recruiter enters the candidate name once and receives a structured research profile.
+
+The baseline gives the recruiter raw search results.
+
+The GenAI workflow gives the recruiter an organized first draft of candidate research.
+
+This saves time because the recruiter does not need to start from a blank page.
 
 ## Evaluation and Results
 
-I evaluated the project by comparing two approaches.
+For this prototype, I evaluated the app as a workflow demo.
 
-The baseline approach is simple candidate search and raw profile display. In this approach, the recruiter can find the candidate and read the profile, but the recruiter still needs to interpret the information manually.
+I compared two approaches:
 
-The GenAI style approach searches the candidate and generates a structured screening summary. This helps the recruiter understand the candidate faster and prepare for the interview.
+Baseline approach: manual web search and manual note taking
 
-I tested the app with five synthetic candidate profiles:
+Prototype approach: candidate name input and structured AI style research summary
 
-Mingyu Wang, a candidate with analytics and business analysis experience
+I used several sample candidate names and sample output scenarios to evaluate whether the workflow would be useful for an HR recruiter.
 
-Alex Chen, a candidate with software engineering experience
+The evaluation rubric included five criteria.
 
-Maria Lopez, a candidate with marketing analytics experience
+## Relevance
 
-David Kim, a candidate with operations and supply chain experience
+The output should focus on professional information that is useful for HR screening. This includes education, work experience, skills, projects, and public professional links.
 
-Priya Patel, a candidate with information systems and product analysis experience
+## Completeness
 
-I used the following rubric to judge the output:
+The output should include the main sections that an HR recruiter needs during first round research.
 
-Accuracy: whether the summary matches the candidate profile
+These sections include candidate overview, possible education, possible experience, skills, projects, source links, uncertainty notes, and interview questions.
 
-Completeness: whether the output includes education, skills, experience, projects, and role fit
+## Usefulness
 
-Usefulness: whether the recruiter can quickly understand the candidate
+The output should help the recruiter understand the candidate faster than manual search.
 
-Interview support: whether the generated questions are useful for a first round interview
+The summary should be easy to read and should support interview preparation.
 
-Human review risk: whether the output could miss details or overstate the candidate's fit
+## Source Transparency
 
-The GenAI style version was more useful than the baseline because it created a consistent screening format. The recruiter did not need to read the entire profile first to understand the candidate's background. The app also helped generate interview questions, which the baseline did not provide.
+The output should include links or source placeholders so the recruiter can verify the information.
 
-The main limitation is that the current version uses rule based logic instead of a live LLM API. This makes the app easier to run and safer for a class demo, but the summary is less flexible than a true LLM generated output. Another limitation is that the tool can miss details or make the candidate sound stronger than the original profile. Because of this, HR should always review the original resume before making a final decision.
+This is important because HR should not rely only on an AI summary.
+
+## Risk Control
+
+The output should clearly mention uncertainty.
+
+For example, if the candidate has a common name, the app should remind the recruiter that some information may belong to another person with the same name.
+
+## Evaluation Findings
+
+The prototype shows that a structured GenAI workflow can make candidate research easier for recruiters.
+
+Compared with manual search, the app provides a clearer output format. It helps the recruiter quickly review possible education, experience, skills, and interview questions.
+
+The app also improves consistency because every candidate profile follows the same structure.
+
+However, the current HTML version does not perform live web search. Because of this, the evaluation focuses on workflow design, output structure, and business usefulness.
+
+A full implementation would need to be tested with real search results. The full version should be evaluated for accuracy, relevance, source quality, same name confusion, and hallucination risk.
 
 ## What Worked
 
-The app successfully allows a recruiter to search a candidate by name.
+The app clearly demonstrates the HR research workflow.
 
-The app shows a structured candidate profile.
+The interface is simple and easy to understand.
 
-The app generates a readable screening summary.
+The output format is useful for first round candidate research.
 
-The app provides role fit explanation, strengths, concerns, and interview questions.
+The app includes uncertainty notes and a human review reminder.
 
-The app clearly shows how the workflow can save time during first round resume screening.
+The project shows how GenAI can support recruiter productivity without replacing human judgment.
 
-## What Failed or Needs Improvement
+## What Needs Improvement
 
-The app currently uses a small synthetic dataset. A real HR system would need a larger and more secure data source.
+The current version is a demo and does not perform live web search.
 
-The summary generation is rule based in this prototype. A stronger version would connect to an LLM through a backend.
+The current version does not connect to a real LLM API.
 
-The app does not upload or parse real PDF resumes yet.
+The current version uses sample output to represent what the full system would generate.
 
-The app does not rank multiple candidates for one role.
+A future version should use a secure backend to protect API keys.
 
-The app should not be used for final hiring decisions without human review.
+A future version should include live search results and real source links.
+
+A future version should allow the recruiter to add more context, such as school, company, location, or target role.
+
+A future version should include stronger checks for people with the same name.
 
 ## Artifact Snapshot
 
-The project artifact is an HTML web app.
+The artifact is an HTML demo app.
 
-The user opens the app, enters a candidate name, selects a target role, and clicks Search Candidate.
+The user opens the HTML file in a browser.
 
-Example input:
+The user enters a candidate name such as Mingyu Wang.
 
-Candidate Name: Mingyu Wang
+The app shows a structured candidate research profile.
 
-Target Role: Business Analyst Intern
+The output includes candidate overview, possible education, possible work experience, skills, project evidence, source links or source placeholders, uncertainty notes, and interview questions.
 
-Example output:
+Suggested screenshots for this repository:
 
-The app displays Mingyu Wang's candidate profile, including education, skills, experience, projects, and target career area. It then generates an AI style screening summary with candidate overview, role fit, key strengths, potential concerns, suggested interview questions, and a human review reminder.
+Homepage with candidate name input
 
-Screenshots can be added in the repository under a screenshots folder.
+Example search result for Mingyu Wang
 
-Suggested screenshots:
+Candidate profile output
 
-Homepage with search box
-
-Search result for Mingyu Wang
-
-AI Screening Summary output
+Uncertainty notes and human review reminder
 
 ## Setup and Usage Instructions
 
-This project runs as a simple HTML app.
+This project runs as a simple HTML demo.
 
 To use the app:
 
-Download or clone this repository.
+1. Download or clone this repository.
 
-Open the project folder.
+2. Open the project folder.
 
-Find the file named index.html.
+3. Find the file named index.html.
 
-Double click index.html to open it in a browser.
+4. Double click index.html to open it in a browser.
 
-Enter a candidate name, such as Mingyu Wang.
+5. Enter a candidate name, such as Mingyu Wang.
 
-Select a target role.
+6. Click the search button.
 
-Click Search Candidate.
+7. Review the structured candidate research profile.
 
-The app will show the candidate profile and screening summary.
-
-No API key is required for the current prototype.
+No API key is required for the current demo.
 
 ## Repository Contents
 
-index.html contains the full web app, including HTML, CSS, JavaScript, candidate data, search logic, and summary logic.
+index.html contains the full HTML demo app, including the page layout, style, interaction logic, and sample output.
 
-README.md explains the project context, design, evaluation, results, and usage instructions.
+README.md explains the project context, solution design, app logic, evaluation, results, and usage instructions.
 
-screenshots can contain screenshots of the app interface and sample output.
+screenshots contains screenshots of the app interface and sample output.
 
 ## Data and Privacy
 
-This project uses synthetic candidate data for demonstration.
+This project is designed to use public professional information only.
 
-The repository should not include real private resumes, real phone numbers, real addresses, API keys, or sensitive personal information.
+The current demo does not collect real private data.
 
-If this app is expanded in the future, candidate data should be stored securely and handled according to privacy and hiring compliance requirements.
+The repository should not include API keys, private resumes, real phone numbers, home addresses, private emails, or sensitive personal information.
+
+If this app is expanded into a full system, candidate data should be handled carefully and securely.
+
+The app should only summarize publicly available professional information and should always provide sources for human verification.
+
+## Human Review and Responsible Use
+
+This app is designed to assist HR research. It should not make hiring decisions.
+
+The recruiter should verify the source links manually.
+
+The recruiter should be careful with candidates who have common names.
+
+The recruiter should avoid using private, sensitive, or irrelevant personal information.
+
+The recruiter should use this tool as a first draft research assistant.
+
+Final hiring decisions should remain with human reviewers.
 
 ## Future Improvements
 
-A future version could connect the app to a secure backend and an LLM API.
+A future version could connect the HTML frontend to a Flask or Node backend.
 
-A future version could allow HR to upload PDF resumes.
+A future version could use a search API to retrieve live public web results.
 
-A future version could compare multiple candidates for the same target role.
+A future version could use an LLM API to generate the candidate summary.
 
-A future version could include a stronger evaluation dataset and human recruiter feedback.
+A future version could include source ranking and duplicate result removal.
 
-A future version could export the screening summary as a PDF or interview note.
+A future version could allow the recruiter to enter candidate name, school, company, role, and location.
+
+A future version could export the summary as a PDF or interview note.
+
+A future version could evaluate results with more test cases and human recruiter feedback.
 
 ## Conclusion
 
-This project shows how a small GenAI workflow can support a real HR task. The app helps recruiters search a candidate by name, view a structured profile, and generate a first round screening summary. Compared with a simple profile display baseline, the GenAI style workflow gives the recruiter more organized and useful information. However, the tool should remain a decision support assistant, and human recruiters should review the original resume before making final hiring decisions.
+This project demonstrates a focused GenAI workflow for HR candidate research.
+
+The app helps recruiters move from manual web search to a more structured research process. The recruiter enters a candidate name and receives an organized profile that includes possible background, skills, projects, source links, uncertainty notes, and interview questions.
+
+Compared with manual search, the workflow can save time and create more consistent candidate research notes.
+
+The current version is an HTML demo that shows the intended workflow and output format. A full version would connect to a secure backend, public web search API, and LLM API.
+
+The tool should support HR work, and human recruiters should always verify the information before using it in real hiring decisions.
