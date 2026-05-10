@@ -2,7 +2,6 @@
 
 ## Project Overview
 
-This project is a small front end demo of a GenAI powered candidate web research assistant for HR recruiters.
 
 The intended user is an HR recruiter or hiring manager who wants to quickly understand a candidate before a first round screening conversation. In a normal hiring workflow, recruiters often search a candidate name online, open several public pages, read LinkedIn profiles, GitHub pages, school pages, company pages, personal websites, or portfolio pages, and then write notes by hand.
 
