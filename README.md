@@ -300,29 +300,38 @@ This is the easiest way to view the project.
 
 This version does not require an API key.
 
-## Option 2: Run the backend connected version
+## Option 2: Run the Backend Connected Version
 
 This version uses `index1.html` and `serve.py`.
 
-1. Install dependencies.
+### 1. Install dependencies
 
 ```text
 pip install -r requirements.txt
-Create a .env file.
+2. Create a .env file
 
-2. The .env file should include the required API keys.
+Create a file named .env in the project folder.
+
+The .env file should include the required API keys:
 
 OPENAI_API_KEY=your_openai_api_key_here
 SERPAPI_API_KEY=your_serpapi_api_key_here
 OPENAI_MODEL=gpt-5.2
-
-3. Run the backend.
+3. Run the backend
 python serve.py
-Open the backend connected app in the browser.
+4. Open the backend connected app
+
+Open this link in your browser:
+
 http://127.0.0.1:5000/index1.html
+5. Use the app
+
 Enter a candidate name, optional context, and target role.
+
 Click the search button.
+
 Review the AI generated candidate research summary and source links.
+
 Important Security Note
 
 The .env file should not be committed to GitHub.
