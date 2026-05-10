@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF 8">
+  <meta name="viewport" content="width=device width, initial scale=1.0">
+  <title>AI Candidate Web Research Assistant</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: #ffffff;
+      padding: 28px;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      margin-bottom: 22px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+      color: #111827;
+    }
+
+    .header p {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    .searchBox {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 18px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: #57068c;
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #43046d;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      margin-bottom: 22px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: #111827;
+      font-size: 22px;
+    }
+
+    .empty {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      color: #6b7280;
+    }
+
+    .summary {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: #374151;
+    }
+
+    .sourceItem {
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .sourceItem a {
+      color: #57068c;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .sourceItem a:hover {
+      text-decoration: underline;
+    }
+
+    .loading {
+      background: #eef2ff;
+      padding: 18px;
+      border-radius: 14px;
+      color: #3730a3;
+      margin-bottom: 18px;
+    }
+
+    .error {
+      background: #fee2e2;
+      padding: 18px;
+      border-radius: 14px;
+      color: #991b1b;
+      margin-bottom: 18px;
+    }
+
+    .warning {
+      background: #fff7ed;
+      border-left: 5px solid #f97316;
+      padding: 14px;
+      border-radius: 10px;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="header">
+      <h1>AI Candidate Web Research Assistant</h1>
+      <p>
+        This app helps HR recruiters search public professional information about a candidate and organize the results into a structured research profile. The recruiter should verify all sources before using the information in a hiring process.
+      </p>
+    </div>
+
+    <div class="searchBox">
+      <label for="candidateName">Candidate Name</label>
+      <input id="candidateName" type="text" placeholder="Example: Mingyu Wang">
+
+      <label for="context">Optional Context</label>
+      <input id="context" type="text" placeholder="Example: Johns Hopkins Carey Business School, Business Analyst, New York">
+
+      <label for="targetRole">Target Role</label>
+      <select id="targetRole">
+        <option value="Business Analyst Intern">Business Analyst Intern</option>
+        <option value="Data Analyst Intern">Data Analyst Intern</option>
+        <option value="Marketing Analyst Intern">Marketing Analyst Intern</option>
+        <option value="AI Strategy Analyst Intern">AI Strategy Analyst Intern</option>
+        <option value="Operations Analyst Intern">Operations Analyst Intern</option>
+      </select>
+
+      <button onclick="researchCandidate()">Search Public Web</button>
+    </div>
+
+    <div id="resultArea" class="empty">
+      Enter a candidate name to start. Example: Mingyu Wang.
+    </div>
+
+  </div>
+
+  <script>
+    async function researchCandidate() {
+      const candidateName = document.getElementById("candidateName").value.trim();
+      const context = document.getElementById("context").value.trim();
+      const targetRole = document.getElementById("targetRole").value;
+      const resultArea = document.getElementById("resultArea");
+
+      if (!candidateName) {
+        resultArea.className = "error";
+        resultArea.innerHTML = "Please enter a candidate name.";
+        return;
+      }
+
+      resultArea.className = "loading";
+      resultArea.innerHTML = "Searching public web results and generating candidate research summary...";
+
+      try {
+        const response = await fetch("/api/research", {
+          method: "POST",
+          headers: {
+            "Content Type": "application/json"
+          },
+          body: JSON.stringify({
+            candidate_name: candidateName,
+            context: context,
+            target_role: targetRole
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          resultArea.className = "error";
+          resultArea.innerHTML = data.error || "Something went wrong.";
+          return;
+        }
+
+        displayResults(data);
+
+      } catch (error) {
+        resultArea.className = "error";
+        resultArea.innerHTML = "Request failed. Make sure the Flask backend is running at http://127.0.0.1:5000.";
+      }
+    }
+
+    function displayResults(data) {
+      const resultArea = document.getElementById("resultArea");
+
+      const sourceHtml = data.search_results.map((item, index) => {
+        return `
+          <div class="sourceItem">
+            <a href="${item.link}" target="_blank">${index + 1}. ${item.title}</a>
+            <div>${item.snippet || ""}</div>
+          </div>
+        `;
+      }).join("");
+
+      resultArea.className = "";
+
+      resultArea.innerHTML = `
+        <div class="card">
+          <h2>AI Candidate Research Summary</h2>
+          <div class="summary">${escapeHtml(data.summary)}</div>
+
+          <div class="warning">
+            <strong>Human Review Reminder:</strong>
+            Public web results may be incomplete, outdated, or about another person with the same name. HR should verify the source links manually before using this information.
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Public Search Sources</h2>
+          ${sourceHtml || "No public search results returned."}
+        </div>
+      `;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.innerText = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
